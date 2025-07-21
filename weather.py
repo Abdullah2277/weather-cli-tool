@@ -10,16 +10,23 @@ load_dotenv()  # Load variables from .env
 API_KEY = os.getenv("OPENWEATHER_API_KEY")  # Replace this with your actual OpenWeatherMap API key
 
 def get_weather(city):
-    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&APPID={API_KEY}&units=metric"
+    temp_unit = input("Choose temperature unit:\n1.Celsius\n2.Fahrenheit\nType 1 or 2: ")
+    if temp_unit == '1':
+        url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&APPID={API_KEY}&units=metric"
+    elif temp_unit == '2':
+        url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&APPID={API_KEY}&units=imperial"
+    else:
+        print("Wrong input. Try again.")
+        return
     response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
         print(Fore.CYAN + f"Weather in {city}:" + Style.RESET_ALL)
-        print(f"Temperature: {data['main']['temp']}°C")
-        print(f"Feels like: {data['main']['feels_like']}°C")
+        print(f"Temperature: {data['main']['temp']}")
+        print(f"Feels like: {data['main']['feels_like']}")
         print(f"Description: {data['weather'][0]['description'].title()}")
         print(f"Humidity: {data['main']['humidity']}%")
-        print(f"Wind Speed: {data['wind']['speed']}%")
+        print(f"Wind Speed: {data['wind']['speed']}m/s")
     else:
         print("City not found or API error.")
 
