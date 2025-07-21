@@ -5,20 +5,25 @@ from dotenv import load_dotenv
 import os
 from colorama import Fore, Style
 
-load_dotenv()  # Load variables from .env
+load_dotenv()  # Loads variables from .env
 
 API_KEY = os.getenv("OPENWEATHER_API_KEY")  # Replace this with your actual OpenWeatherMap API key
 
 def get_weather(city):
-    temp_unit = input("Choose temperature unit:\n1.Celsius\n2.Fahrenheit\nType 1 or 2: ")
-    if temp_unit == '1':
-        url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&APPID={API_KEY}&units=metric"
-    elif temp_unit == '2':
-        url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&APPID={API_KEY}&units=imperial"
-    else:
-        print("Wrong input. Try again.")
-        return
+
+    while True:
+        temp_unit = input("Choose temperature unit:\n1.Celsius\n2.Fahrenheit\nType 1 or 2: ")
+        if temp_unit == '1':
+            url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&APPID={API_KEY}&units=metric"
+            break
+        elif temp_unit == '2':
+            url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&APPID={API_KEY}&units=imperial"
+            break
+        else:
+            print("Wrong input. Please try again.")
+
     response = requests.get(url)
+
     if response.status_code == 200:
         data = response.json()
         print(Fore.CYAN + f"Weather in {city}:" + Style.RESET_ALL)
